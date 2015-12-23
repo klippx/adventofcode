@@ -4,29 +4,47 @@ module Day02
       @length, @width, @height = raw_dimensions.split('x').map { |dim| dim.to_i }
     end
 
+    def ribbon_needed
+      smallest_perimeter + volume
+    end
+
     def wrapping_needed
       box_area + padding
     end
 
+    private
+
     def box_area
-      2*side_x + 2*side_y + 2*side_z
+      2*area_side_x + 2*area_side_y + 2*area_side_z
     end
 
     def padding
-      [side_x, side_y, side_z].min
+      [area_side_x, area_side_y, area_side_z].min
     end
 
-    private
+    def smallest_perimeter
+      dimensions.min(2)
+        .map { |dim| dim*2 }
+        .inject(:+)
+    end
 
-    def side_x
+    def dimensions
+      [@length, @width, @height]
+    end
+
+    def volume
+      @length*@width*@height
+    end
+
+    def area_side_x
       @length*@width
     end
 
-    def side_y
+    def area_side_y
       @width*@height
     end
 
-    def side_z
+    def area_side_z
       @height*@length
     end
   end
