@@ -1,25 +1,28 @@
 module Day03
   class DeliveryService
-    def initialize(current_position:, move: move)
-      @current_position = current_position
+    def initialize(x_pos:, y_pos:, move: move)
+      @x_pos = x_pos
+      @y_pos = y_pos
       @move = move
     end
 
     def move
       case @move
       when '^'
-        @current_position[1] += 1
+        @y_pos += 1
       when 'v'
-        @current_position[1] -= 1
+        @y_pos -= 1
       when '<'
-        @current_position[0] -= 1
+        @x_pos -= 1
       when '>'
-        @current_position[0] += 1
+        @x_pos += 1
       end
+
+      [@x_pos, @y_pos]
     end
 
     def coordinate_string
-      "#{@current_position[0]}x#{@current_position[1]}y"
+      "#{@x_pos}x#{@y_pos}y"
     end
   end
 end

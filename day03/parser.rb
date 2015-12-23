@@ -2,7 +2,8 @@ module Day03
   class Parser
     def initialize(input)
       @input = input
-      @position = [0,0]
+      @x_pos = 0
+      @y_pos = 0
       @houses_deliveries = {}
     end
 
@@ -13,8 +14,8 @@ module Day03
     def total_houses
       @houses_deliveries['0x0y'] = 1
       @input.split(//).each do |move|
-        delivery_service = DeliveryService.new(current_position: @position, move: move)
-        @position = delivery_service.move
+        delivery_service = DeliveryService.new(x_pos: @x_pos, y_pos: @y_pos, move: move)
+        @x_pos, @y_pos = delivery_service.move
 
         coord = delivery_service.coordinate_string
         if @houses_deliveries.key?(coord)
