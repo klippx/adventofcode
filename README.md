@@ -4,7 +4,13 @@ Running ALL tests:
 
 `rake test`
 
-## Day01
+## Day n
+
+Run tests: rake day<%02n>:test
+
+Run solution: rake day<%02n>:answer
+
+### Example, day n=1:
 
 Run tests: `rake day01:test`
 
