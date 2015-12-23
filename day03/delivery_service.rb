@@ -1,12 +1,12 @@
 module Day03
   class DeliveryService
-    def initialize(x_pos:, y_pos:, move: move)
+    def initialize(x_pos:, y_pos:, move:)
       @x_pos = x_pos
       @y_pos = y_pos
       @move = move
     end
 
-    def move
+    def move_it
       case @move
       when '^'
         @y_pos += 1

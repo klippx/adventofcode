@@ -15,7 +15,7 @@ module Day03
       @houses_deliveries['0x0y'] = 1
       @input.split(//).each do |move|
         delivery_service = DeliveryService.new(x_pos: @x_pos, y_pos: @y_pos, move: move)
-        @x_pos, @y_pos = delivery_service.move
+        @x_pos, @y_pos = delivery_service.move_it
 
         coord = delivery_service.coordinate_string
         if @houses_deliveries.key?(coord)
