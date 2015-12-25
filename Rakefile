@@ -35,7 +35,7 @@ task :new do
       file.write "      @input=input\n"
       file.write "    end\n\n"
       file.write "    def to_s\n"
-      file.write "      \"Result: #{some_method}\n\"\n"
+      file.write "      \"Result: \#\{some_method\}\\n\"\n"
       file.write "    end\n\n"
       file.write "    def some_method\n"
       file.write "    end\n"
