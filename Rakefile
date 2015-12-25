@@ -20,7 +20,7 @@ task :new do
     Dir.mkdir 'test/' + day_name
 
     File.open(input_file_name, 'w') do |file|
-      file.write '\n'
+      file.write "\n"
     end
 
     File.open(main_file_name, 'w') do |file|
@@ -108,5 +108,15 @@ namespace :day03 do
   task :answer do
     require './day03/day03'
     puts Day03::Parser.new(File.open('./day03/input.txt').read)
+  end
+end
+namespace :day04 do
+  task :test do
+    Dir.glob('./test/day04/*_test.rb').each { |file| require file }
+  end
+
+  task :answer do
+    require './day04/day04'
+    puts Day04::Parser.new(File.open('./day04/input.txt').read)
   end
 end
