@@ -127,3 +127,14 @@ namespace :day04 do
     puts Day04::Parser.new(File.open('./day04/input.txt').read)
   end
 end
+
+namespace :day05 do
+  task :test do
+    Dir.glob('./test/day05/*_test.rb').each { |file| require file }
+  end
+
+  task :answer do
+    require './day05/day05'
+    puts Day05::Parser.new(File.open('./day05/input.txt').read)
+  end
+end
