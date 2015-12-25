@@ -33,6 +33,11 @@ task :new do
       file.write "  class Parser\n"
       file.write "    def initialize(input)\n"
       file.write "      @input=input\n"
+      file.write "    end\n\n"
+      file.write "    def to_s\n"
+      file.write "      \"Result: #{some_method}\n\"\n"
+      file.write "    end\n\n"
+      file.write "    def some_method\n"
       file.write "    end\n"
       file.write "  end\n"
       file.write "end\n"
@@ -51,6 +56,7 @@ task :new do
 
     File.open('Rakefile', 'a') do |file|
       file.write <<-EOS
+
 namespace :#{day_name} do
   task :test do
     Dir.glob('./test/#{day_name}/*_test.rb').each { |file| require file }
@@ -110,6 +116,7 @@ namespace :day03 do
     puts Day03::Parser.new(File.open('./day03/input.txt').read)
   end
 end
+
 namespace :day04 do
   task :test do
     Dir.glob('./test/day04/*_test.rb').each { |file| require file }
