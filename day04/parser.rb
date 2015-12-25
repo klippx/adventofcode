@@ -3,7 +3,7 @@ require 'digest'
 module Day04
   class Parser
     def initialize(input)
-      @input=input
+      @input=input.strip
     end
 
     def to_s
