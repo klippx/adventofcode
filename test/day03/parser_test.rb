@@ -8,14 +8,19 @@ describe Day03::Parser do
       subject.total_houses.must_equal 2
     end
 
-    it '^>v< delivers to four houses' do
-      subject = Day03::Parser.new('^>v<')
-      subject.total_houses.must_equal 4
+    it '^v delivers to three houses' do
+      subject = Day03::Parser.new('^v')
+      subject.total_houses.must_equal 3
     end
 
-    it '^v^v^v^v^v delivers to two houses' do
+    it '^>v< delivers to three houses' do
+      subject = Day03::Parser.new('^>v<')
+      subject.total_houses.must_equal 3
+    end
+
+    it '^v^v^v^v^v delivers to eleven houses' do
       subject = Day03::Parser.new('^v^v^v^v^v')
-      subject.total_houses.must_equal 2
+      subject.total_houses.must_equal 11
     end
   end
 end
