@@ -5,10 +5,13 @@ module Day05
     end
 
     def to_s
-      "Result: #{some_method}\n"
+      "Part 1 -- Number of nice strings: #{select_nice.count}\n"
     end
 
-    def some_method
+    def select_nice
+      @input.split("\n").select do |string|
+        Day05::NiceChecker.new(string).is_nice?
+      end
     end
   end
 end
