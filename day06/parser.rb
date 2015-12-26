@@ -14,26 +14,13 @@ module Day06
 
     def lights_count
       @grid={}
-      bench = { turn_on: [], turn_off: [], toggle: [], parse_instruction: [] }
+      bench = { turn_on: [], turn_off: [], toggle: [] }
       parsed_instruction, start_pos, end_pos = nil, nil, nil
       t1=Time.now
       @input.split("\n").each_with_index do |instruction, i|
-        bench[:parse_instruction] << Benchmark.realtime { parsed_instruction, start_pos, end_pos = parse_instruction(instruction) }
+        parsed_instruction, start_pos, end_pos = parse_instruction(instruction, :part_one)
         bench[parsed_instruction] << Benchmark.realtime { send(parsed_instruction, start_pos, end_pos) }
-        if i > 0 && i%50 == 0
-          t2=Time.now
-          elapsed_time = t2-t1
-          velocity = i/elapsed_time
-          distance_left = 300-i
-          printf "\nBenchmark report; Progress: %.2f%%, (elapsed time=%.2fs), (time left=%.2fs)\n", i/3.0, elapsed_time, distance_left/velocity
-          bench.keys.each do |key|
-            next unless bench[key].size > 0
-            total = bench[key].inject(:+)
-            count = bench[key].size
-            avg = bench[key].inject(:+)
-            puts key.to_s.ljust(20) + sprintf("Time spent in method: %.2fs, relative: %.2f%%", total, total/elapsed_time*100)
-          end
-        end
+        report_progress(t1, i, bench) if i > 0 && i%50 == 0
       end
 
       @grid.keys.count
@@ -41,27 +28,13 @@ module Day06
 
     def brigthness_count
       @grid={}
-      bench = { turn_on_2: [], turn_off_2: [], toggle_2: [], parse_instruction: [] }
+      bench = { turn_on_2: [], turn_off_2: [], toggle_2: [] }
       parsed_instruction, start_pos, end_pos = nil, nil, nil
       t1=Time.now
       @input.split("\n").each_with_index do |instruction, i|
-        bench[:parse_instruction] << Benchmark.realtime { parsed_instruction, start_pos, end_pos = parse_instruction(instruction) }
-        parsed_instruction = "#{parsed_instruction}_2".to_sym
+        parsed_instruction, start_pos, end_pos = parse_instruction(instruction, :part_two)
         bench[parsed_instruction] << Benchmark.realtime { send(parsed_instruction, start_pos, end_pos) }
-        if i > 0 && i%50 == 0
-          t2=Time.now
-          elapsed_time = t2-t1
-          velocity = i/elapsed_time
-          distance_left = 300-i
-          printf "\nBenchmark report; Progress: %.2f%%, (elapsed time=%.2fs), (time left=%.2fs)\n", i/3.0, elapsed_time, distance_left/velocity
-          bench.keys.each do |key|
-            next unless bench[key].size > 0
-            total = bench[key].inject(:+)
-            count = bench[key].size
-            avg = bench[key].inject(:+)
-            puts key.to_s.ljust(20) + sprintf("Time spent in method: %.2fs, relative: %.2f%%", total, total/elapsed_time*100)
-          end
-        end
+        report_progress(t1, i, bench) if i > 0 && i%50 == 0
       end
 
       @grid.map { |_key, value| value }.inject(:+)
@@ -69,29 +42,7 @@ module Day06
 
     private
 
-    def parse_instruction(instruction)
-      method = instruction.start_with?('turn on') && :turn_on ||
-               instruction.start_with?('turn off') && :turn_off ||
-               instruction.start_with?('toggle') && :toggle or
-               fail "Unknown instruction; #{instruction}"
-
-      start_coord = instruction.match(/(\d+,\d+)/)[1] or
-                    fail "Unknown start coordinates; #{instruction}"
-      end_coord =   instruction.match(/\d+,\d+[^\d]+(\d+,\d+)/)[1] or
-                    fail "Unknown end coordinates; #{instruction}"
-
-      [
-        method,
-        {
-          x: start_coord.match(/(\d+)/)[1].to_i,
-          y: start_coord.match(/\d+,(\d+)/)[1].to_i,
-        },
-        {
-          x: end_coord.match(/(\d+)/)[1].to_i,
-          y: end_coord.match(/\d+,(\d+)/)[1].to_i,
-        },
-      ]
-    end
+    # --- PART ONE HELPERS ---
 
     def turn_on(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
@@ -121,9 +72,7 @@ module Day06
       end
     end
 
-    def key(x,y)
-      "#{x}x#{y}y"
-    end
+    # --- PART TWO HELPERS ---
 
     def turn_on_2(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
@@ -158,6 +107,53 @@ module Day06
             @grid[key(x,y)] = 2
           end
         end
+      end
+    end
+
+    # --- SHARED HELPERS ---
+
+    def parse_instruction(instruction, part)
+      method = instruction.start_with?('turn on') && :turn_on ||
+               instruction.start_with?('turn off') && :turn_off ||
+               instruction.start_with?('toggle') && :toggle or
+               fail "Unknown instruction; #{instruction}"
+
+      start_coord = instruction.match(/(\d+,\d+)/)[1] or
+                    fail "Unknown start coordinates; #{instruction}"
+      end_coord =   instruction.match(/\d+,\d+[^\d]+(\d+,\d+)/)[1] or
+                    fail "Unknown end coordinates; #{instruction}"
+
+       method = "#{method}_2".to_sym if part == :part_two
+
+      [
+        method,
+        {
+          x: start_coord.match(/(\d+)/)[1].to_i,
+          y: start_coord.match(/\d+,(\d+)/)[1].to_i,
+        },
+        {
+          x: end_coord.match(/(\d+)/)[1].to_i,
+          y: end_coord.match(/\d+,(\d+)/)[1].to_i,
+        },
+      ]
+    end
+
+    def key(x,y)
+      "#{x}x#{y}y"
+    end
+
+    def report_progress(t1, i, bench)
+      t2=Time.now
+      elapsed_time = t2-t1
+      velocity = i/elapsed_time
+      distance_left = 300-i
+      printf "\nBenchmark report; Progress: %.2f%%, (elapsed time=%.2fs), (time left=%.2fs)\n", i/3.0, elapsed_time, distance_left/velocity
+      bench.keys.each do |key|
+        next unless bench[key].size > 0
+        total = bench[key].inject(:+)
+        count = bench[key].size
+        avg = bench[key].inject(:+)
+        puts "\t" + key.to_s.ljust(20) + sprintf("Time spent in method: %.2fs, relative: %.2f%%", total, total/elapsed_time*100)
       end
     end
   end
