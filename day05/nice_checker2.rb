@@ -11,12 +11,14 @@ module Day05
     # It contains a pair of any two letters that appears at least twice in the string without overlapping,
     # like xyxy (xy) or aabcdefgaa (aa), but not like aaa (aa, but it overlaps).
     def has_recurring_substrings_of_size_two?
-      pairs = (
-        @string.split(//).each_slice(2).map { |pair| pair } +
-        @string[(1..-1)].split(//).each_slice(2).map { |pair| pair }
-      ).select { |pair| pair.size > 1 }
-
-      pairs != pairs.uniq
+      @string.split(//).each_with_index.any? do |char, i|
+        dupe_string = @string.dup
+        pair = dupe_string.slice(i, 2)
+        next unless pair.size == 2
+        dupe_string[i]='_'
+        dupe_string[i+1]='_'
+        dupe_string[Regexp.new pair]
+      end
     end
 
     # It contains at least one letter which repeats with exactly one letter between them,
