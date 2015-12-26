@@ -4,7 +4,6 @@ module Day06
   class Parser
     def initialize(input)
       @input=input
-      @grid={}
     end
 
     def to_s
@@ -13,7 +12,7 @@ module Day06
     end
 
     def lights_count
-      @grid={}
+      reset_grid
       bench = { turn_on: [], turn_off: [], toggle: [] }
       parsed_instruction, start_pos, end_pos = nil, nil, nil
       t1=Time.now
@@ -23,11 +22,11 @@ module Day06
         report_progress(t1, i, bench) if i > 0 && i%50 == 0
       end
 
-      @grid.keys.count
+      count_grid
     end
 
     def brigthness_count
-      @grid={}
+      reset_grid
       bench = { turn_on_2: [], turn_off_2: [], toggle_2: [] }
       parsed_instruction, start_pos, end_pos = nil, nil, nil
       t1=Time.now
@@ -37,7 +36,7 @@ module Day06
         report_progress(t1, i, bench) if i > 0 && i%50 == 0
       end
 
-      @grid.map { |_key, value| value }.inject(:+)
+      count_grid
     end
 
     private
@@ -47,7 +46,7 @@ module Day06
     def turn_on(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
         (start_pos[:y]..end_pos[:y]).each do |y|
-          @grid[key(x,y)] = true
+          @grid[x][y] = 1
         end
       end
     end
@@ -55,7 +54,7 @@ module Day06
     def turn_off(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
         (start_pos[:y]..end_pos[:y]).each do |y|
-          @grid.delete key(x,y)
+          @grid[x][y] = 0
         end
       end
     end
@@ -63,10 +62,10 @@ module Day06
     def toggle(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
         (start_pos[:y]..end_pos[:y]).each do |y|
-          if @grid.key? key(x,y)
-            @grid.delete key(x,y)
+          if @grid[x][y] == 0
+            @grid[x][y] = 1
           else
-            @grid[key(x,y)] = true
+            @grid[x][y] = 0
           end
         end
       end
@@ -77,11 +76,7 @@ module Day06
     def turn_on_2(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
         (start_pos[:y]..end_pos[:y]).each do |y|
-          if @grid.key? key(x,y)
-            @grid[key(x,y)] += 1
-          else
-            @grid[key(x,y)] = 1
-          end
+          @grid[x][y] += 1
         end
       end
     end
@@ -89,10 +84,8 @@ module Day06
     def turn_off_2(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
         (start_pos[:y]..end_pos[:y]).each do |y|
-          if @grid.key?(key(x,y)) && @grid[key(x,y)] > 0
-            @grid[key(x,y)] -= 1
-          elsif @grid.key?(key(x,y)) && @grid[key(x,y)] == 0
-            @grid.delete key(x,y)
+          if @grid[x][y] > 0
+            @grid[x][y] -= 1
           end
         end
       end
@@ -101,11 +94,7 @@ module Day06
     def toggle_2(start_pos, end_pos)
       (start_pos[:x]..end_pos[:x]).each do |x|
         (start_pos[:y]..end_pos[:y]).each do |y|
-          if @grid.key? key(x,y)
-            @grid[key(x,y)] += 2
-          else
-            @grid[key(x,y)] = 2
-          end
+          @grid[x][y] += 2
         end
       end
     end
@@ -138,8 +127,24 @@ module Day06
       ]
     end
 
-    def key(x,y)
-      "#{x}x#{y}y"
+    def reset_grid
+      @grid=[]
+      (0..999).each do |x|
+        @grid[x]=[]
+        (0..999).each do |y|
+          @grid[x][y]=0
+        end
+      end
+    end
+
+    def count_grid
+      count=0
+      (0..999).each do |x|
+        (0..999).each do |y|
+          count += @grid[x][y]
+        end
+      end
+      count
     end
 
     def report_progress(t1, i, bench)
