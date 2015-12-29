@@ -3,7 +3,7 @@ require 'minitest/focus'
 require './day07/day07'
 
 describe Day07::Parser do
-  describe '#read_circuit' do
+  describe '#build_circuit' do
     it 'reads' do
       subject = Day07::Parser.new("NOT a -> b\n123 -> a")
       subject.build_circuit.resolve.must_equal ["a -> 123", "b -> 65412"]
