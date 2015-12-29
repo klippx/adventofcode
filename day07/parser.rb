@@ -1,3 +1,5 @@
+require 'pry'
+
 module Day07
   class Parser
     def initialize(input)
@@ -5,22 +7,84 @@ module Day07
     end
 
     def to_s
-      "Result: #{some_method}\n"
+      "Result: #{read_circuit}\n"
     end
 
-    def some_method
+    def read_circuit
+      gates=[]
+      wires=[]
+      @input.split("\n").each do |instruction|
+        gate_text, wire_text = instruction.split(' -> ')
+        gate = assemble_gate(gate_text)
+        gates << gate
+        wires << Wire.new(wire_text, gate)
+      end
+
+      CircuitBoard.new(gates, wires).resolve
+    end
+
+    def assemble_gate(gate_text)
+      splitted_gate_text = gate_text.split(' ')
+      gate_params = if splitted_gate_text.size == 1
+        Gate.new(gate_text.to_i)
+      elsif splitted_gate_text.size == 2
+        Gate.new(*splitted_gate_text.reverse)
+      else
+        Gate.new(*splitted_gate_text)
+      end
+    end
+  end
+
+  class CircuitBoard
+    def initialize(gates, wires)
+      @gates=gates
+      @wires=wires
+    end
+
+    def resolve
+      @resolved_wires={}
+      until @resolved_wires.keys.size == @wires.size do
+        @wires.each do |wire|
+          begin
+            @resolved_wires[wire.name] = get_wire_output(wire)
+          rescue StandardError
+            @resolved_wires.delete wire.name
+          end
+        end
+      end
+
+      @resolved_wires.keys.sort.map do |wire_name|
+        "#{wire_name} -> #{@resolved_wires[wire_name]}"
+      end
+    end
+
+    def get_wire_output(wire)
+      operator = wire.source.instance_variable_get(:@operator)
+      if operator
+        input_one = @resolved_wires[wire.source.instance_variable_get(:@input_one)]
+        input_two = @resolved_wires[wire.source.instance_variable_get(:@input_two)]
+        Gate.new(input_one, operator, input_two).output
+      else
+        wire.source.output
+      end
     end
   end
 
   class Gate
-    def initialize(input_one, operator, input_two=nil)
-      @operator=operator.downcase.to_sym
+    def initialize(input_one, operator=nil, input_two=nil)
+      @operator=operator.downcase.to_sym if operator
       @input_one=input_one
       @input_two=input_two
     end
 
     def output
-      self.send(@operator)
+      if @operator
+        self.send(@operator)
+      elsif @input_one
+        @input_one
+      else
+        fail 'incomplete gate'
+      end
     end
 
     def and
@@ -50,12 +114,18 @@ module Day07
     end
   end
 
-  # Gate:     source=Gate.new(...).output
-  # Constant: source=123
   class Wire
-    def initialize(name)
+    def initialize(name, source)
       @name=name
       @source=source
+    end
+
+    def name
+      @name
+    end
+
+    def source
+      @source
     end
   end
 end

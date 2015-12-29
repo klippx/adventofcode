@@ -2,8 +2,10 @@ require 'minitest/autorun'
 require './day07/day07'
 
 describe Day07::Parser do
-  describe '#some_method' do
-    it 'does something' do
+  describe '#read_circuit' do
+    it 'reads' do
+      subject = Day07::Parser.new("NOT a -> b\n123 -> a")
+      subject.read_circuit.must_equal ["a -> 123", "b -> 65412"]
     end
   end
 end
