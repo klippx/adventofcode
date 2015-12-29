@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'minitest/focus'
 require './day07/day07'
 
 describe Day07::Parser do
@@ -6,6 +7,16 @@ describe Day07::Parser do
     it 'reads' do
       subject = Day07::Parser.new("NOT a -> b\n123 -> a")
       subject.read_circuit.must_equal ["a -> 123", "b -> 65412"]
+    end
+
+    it 'reads' do
+      subject = Day07::Parser.new("NOT c -> b\n123 -> a\na LSHIFT 2 -> c")
+      subject.read_circuit.must_equal ["a -> 123", "b -> 65043", "c -> 492"]
+    end
+
+    it 'reads' do
+      subject = Day07::Parser.new("lx -> a\nlx -> b\n123 -> lx")
+      subject.read_circuit.must_equal ["a -> 123", "b -> 123", "lx -> 123"]
     end
   end
 end
@@ -34,6 +45,10 @@ describe Day07::Gate do
 
     it 'NOT 456 gives 65079' do
       Day07::Gate.new(456, 'NOT').output.must_equal 65079
+    end
+
+    it 'NOT 492 gives 65043' do
+      Day07::Gate.new(492, 'NOT').output.must_equal 65043
     end
   end
 end

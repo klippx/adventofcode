@@ -26,7 +26,11 @@ module Day07
     def assemble_gate(gate_text)
       splitted_gate_text = gate_text.split(' ')
       gate_params = if splitted_gate_text.size == 1
-        Gate.new(gate_text.to_i)
+        if gate_text[/\d+/]
+          Gate.new(gate_text.to_i)
+        else
+          Gate.new(gate_text, :noop)
+        end
       elsif splitted_gate_text.size == 2
         Gate.new(*splitted_gate_text.reverse)
       else
@@ -46,7 +50,9 @@ module Day07
       until @resolved_wires.keys.size == @wires.size do
         @wires.each do |wire|
           begin
-            @resolved_wires[wire.name] = get_wire_output(wire)
+            unless @resolved_wires.key? wire.name
+              @resolved_wires[wire.name] = get_wire_output(wire)
+            end
           rescue StandardError
             @resolved_wires.delete wire.name
           end
@@ -60,10 +66,16 @@ module Day07
 
     def get_wire_output(wire)
       operator = wire.source.instance_variable_get(:@operator)
-      if operator
+      if operator && operator != :noop
         input_one = @resolved_wires[wire.source.instance_variable_get(:@input_one)]
-        input_two = @resolved_wires[wire.source.instance_variable_get(:@input_two)]
+        input_two_name = wire.source.instance_variable_get(:@input_two)
+        input_two = if input_two_name
+          @resolved_wires[input_two_name] || input_two_name.to_i if input_two_name[/\d+/]
+        end
         Gate.new(input_one, operator, input_two).output
+      elsif operator && operator == :noop
+        input_one = @resolved_wires[wire.source.output]
+        input_one or raise RuntimeError, 'nope'
       else
         wire.source.output
       end
@@ -75,6 +87,10 @@ module Day07
       @operator=operator.downcase.to_sym if operator
       @input_one=input_one
       @input_two=input_two
+    end
+
+    def to_s
+      "Gate<##{object_id}> [#{@input_one} #{@operator} #{@input_two}]"
     end
 
     def output
@@ -101,6 +117,10 @@ module Day07
 
     def lshift
       @input_one << @input_two
+    end
+
+    def noop
+      @input_one
     end
 
     def not

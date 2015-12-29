@@ -6,6 +6,8 @@ GEM
     coderay (1.1.0)
     method_source (0.8.2)
     minitest (5.8.3)
+    minitest-focus (1.1.2)
+      minitest (>= 4, < 6)
     minitest-reporters (1.1.7)
       ansi
       builder
@@ -23,6 +25,7 @@ PLATFORMS
 
 DEPENDENCIES
   minitest
+  minitest-focus
   minitest-reporters
   pry
 
