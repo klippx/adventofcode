@@ -8,8 +8,10 @@ module Day07
     end
 
     def to_s
-      "Result, part1: #{build_circuit.resolve.select { |a| a.start_with?('a ->') } }\n" +
-      "Result, part2: #{build_circuit_with_override('3176 -> b').resolve.select { |a| a.start_with?('a ->') } }\n"
+      solution_part1 = build_circuit.resolve.select { |a| a.start_with?('a ->') }.first
+      override_text = "#{solution_part1.split(' -> ')[1]} -> b"
+      solution_part2 = build_circuit_with_override(override_text).resolve.select { |a| a.start_with?('a ->') }.first
+      "Result, part1: #{solution_part1}\nResult, part2: #{solution_part2}\n"
     end
 
     def build_circuit
