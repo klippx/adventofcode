@@ -11,7 +11,7 @@ module Day07
         @wires.each do |wire|
           begin
             @resolved_wires[wire.name] = get_wire_output(wire) unless @resolved_wires.key? wire.name
-          rescue StandardError
+          rescue CircuitError
           end
         end
       end
@@ -38,14 +38,10 @@ module Day07
         input_two_name = wire.source.instance_variable_get(:@input_two)
         input_one = tap_wire_source(input_one_name)
         input_two = tap_wire_source(input_two_name)
-        Gate.new(input_one, operator, input_two).output or flunk "[CircuitBoard#get_wire_output] gate is dependent on unresolved inputs #{input_one_name} => #{input_one}, #{input_two_name} => #{input_two}"
+        Gate.new(input_one, operator, input_two).output or fail CircuitError
       else
         wire.source.output
       end
-    end
-
-    def flunk(s)
-      fail RuntimeError, s
     end
   end
 end

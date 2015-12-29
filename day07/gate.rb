@@ -19,22 +19,22 @@ module Day07
     end
 
     def and
-      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
+      fail CircuitError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one & @input_two
     end
 
     def or
-      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
+      fail CircuitError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one | @input_two
     end
 
     def rshift
-      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
+      fail CircuitError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one >> @input_two
     end
 
     def lshift
-      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
+      fail CircuitError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one << @input_two
     end
 
@@ -43,6 +43,7 @@ module Day07
     end
 
     def not
+      fail CircuitError, 'input must be present' if @input_one.nil?
       @input_one
         .to_s(2)
         .rjust(16, '0')

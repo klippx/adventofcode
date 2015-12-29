@@ -1,6 +1,7 @@
 require 'pry'
 
 module Day07
+  class CircuitError < RuntimeError; end;
   class Parser
     def initialize(input)
       @input=input
