@@ -48,6 +48,7 @@ module Day07
     def resolve
       @resolved_wires={}
       until @resolved_wires.keys.size == @wires.size do
+        puts "#{@resolved_wires.keys.size} =/= #{@wires.size}"
         @wires.each do |wire|
           begin
             unless @resolved_wires.key? wire.name
@@ -66,6 +67,7 @@ module Day07
 
     def get_wire_output(wire)
       operator = wire.source.instance_variable_get(:@operator)
+
       if operator && operator != :noop
         input_one = @resolved_wires[wire.source.instance_variable_get(:@input_one)]
         input_two_name = wire.source.instance_variable_get(:@input_two)
@@ -75,10 +77,15 @@ module Day07
         Gate.new(input_one, operator, input_two).output
       elsif operator && operator == :noop
         input_one = @resolved_wires[wire.source.output]
-        input_one or raise RuntimeError, 'nope'
+        input_one or flunk "#{wire.name} is dependent on unresolved wire #{wire.source.to_s}"
       else
         wire.source.output
       end
+    end
+
+    def flunk(s)
+      puts s
+      fail RuntimeError, s
     end
   end
 
@@ -94,13 +101,12 @@ module Day07
     end
 
     def output
-      if @operator
+      result = if @operator
         self.send(@operator)
       elsif @input_one
         @input_one
-      else
-        fail 'incomplete gate'
       end
+      result or fail 'incomplete gate'
     end
 
     def and
