@@ -6,32 +6,32 @@ describe Day07::Parser do
   describe '#read_circuit' do
     it 'reads' do
       subject = Day07::Parser.new("NOT a -> b\n123 -> a")
-      subject.read_circuit.must_equal ["a -> 123", "b -> 65412"]
+      subject.build_circuit.resolve.must_equal ["a -> 123", "b -> 65412"]
     end
 
     it 'reads' do
       subject = Day07::Parser.new("NOT c -> b\n123 -> a\na LSHIFT 2 -> c")
-      subject.read_circuit.must_equal ["a -> 123", "b -> 65043", "c -> 492"]
+      subject.build_circuit.resolve.must_equal ["a -> 123", "b -> 65043", "c -> 492"]
     end
 
     it 'reads' do
       subject = Day07::Parser.new("lx -> a\nlx -> b\n123 -> lx")
-      subject.read_circuit.must_equal ["a -> 123", "b -> 123", "lx -> 123"]
+      subject.build_circuit.resolve.must_equal ["a -> 123", "b -> 123", "lx -> 123"]
     end
 
     it 'reads' do
       subject = Day07::Parser.new("123 -> lx\nlx -> ly\nly -> a")
-      subject.read_circuit.must_equal ["a -> 123", "lx -> 123", "ly -> 123"]
+      subject.build_circuit.resolve.must_equal ["a -> 123", "lx -> 123", "ly -> 123"]
     end
 
     it 'reads' do
       subject = Day07::Parser.new("123 -> lx\n456 -> ly\nly OR lx -> a")
-      subject.read_circuit.must_equal ["a -> 507", "lx -> 123", "ly -> 456"]
+      subject.build_circuit.resolve.must_equal ["a -> 507", "lx -> 123", "ly -> 456"]
     end
 
     it 'reads' do
       subject = Day07::Parser.new("c LSHIFT 1 -> t\n0 -> c")
-      subject.read_circuit.must_equal ["c -> 0", "t -> 0"]
+      subject.build_circuit.resolve.must_equal ["c -> 0", "t -> 0"]
     end
   end
 end

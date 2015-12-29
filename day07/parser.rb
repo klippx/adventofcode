@@ -8,11 +8,11 @@ module Day07
     end
 
     def to_s
-      "Result, part1: #{read_circuit.select { |a| a.start_with?('a ->') } }\n" +
-      "Result, part2: #{override_circuit('3176 -> b').select { |a| a.start_with?('a ->') } }\n"
+      "Result, part1: #{build_circuit.resolve.select { |a| a.start_with?('a ->') } }\n" +
+      "Result, part2: #{build_circuit_with_override('3176 -> b').resolve.select { |a| a.start_with?('a ->') } }\n"
     end
 
-    def read_circuit
+    def build_circuit
       gates=[]
       wires=[]
       @input.split("\n").each do |instruction|
@@ -22,10 +22,10 @@ module Day07
         wires << Wire.new(wire_text, gate)
       end
 
-      CircuitBoard.new(gates, wires).resolve
+      CircuitBoard.new(gates, wires)
     end
 
-    def override_circuit(override_text)
+    def build_circuit_with_override(override_text)
       gates=[]
       wires=[]
       override_gate_text, override_wire_text = override_text.split(' -> ')
@@ -39,7 +39,7 @@ module Day07
         wires << Wire.new(wire_text, gate) unless wire_text == override_wire_text
       end
 
-      CircuitBoard.new(gates, wires).resolve
+      CircuitBoard.new(gates, wires)
     end
 
     def assemble_gate(gate_text)
