@@ -48,7 +48,7 @@ module Day07
     def resolve
       @resolved_wires={}
       until @resolved_wires.keys.size == @wires.size do
-        puts "#{@resolved_wires.keys.size} =/= #{@wires.size}"
+        #puts "#{@resolved_wires.keys.size} =/= #{@wires.size}"
         @wires.each do |wire|
           begin
             unless @resolved_wires.key? wire.name
@@ -67,12 +67,15 @@ module Day07
 
     def get_wire_output(wire)
       operator = wire.source.instance_variable_get(:@operator)
-
       if operator && operator != :noop
         input_one = @resolved_wires[wire.source.instance_variable_get(:@input_one)]
         input_two_name = wire.source.instance_variable_get(:@input_two)
         input_two = if input_two_name
-          @resolved_wires[input_two_name] || input_two_name.to_i if input_two_name[/\d+/]
+          if input_two_name[/\d+/]
+            input_two_name.to_i
+          else
+            @resolved_wires[input_two_name]
+          end
         end
         Gate.new(input_one, operator, input_two).output
       elsif operator && operator == :noop

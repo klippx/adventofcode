@@ -27,7 +27,7 @@ describe Day07::Parser do
     focus
     it 'reads' do
       subject = Day07::Parser.new("123 -> lx\n456 -> ly\nly OR lx -> a")
-      subject.read_circuit.must_equal ["a -> 507", "lx -> 123", "ly -> 123"]
+      subject.read_circuit.must_equal ["a -> 507", "lx -> 123", "ly -> 456"]
     end
   end
 end
