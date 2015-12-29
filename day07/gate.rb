@@ -6,8 +6,23 @@ module Day07
       @input_two=input_two
     end
 
+    def operator
+      @operator
+    end
+
     def to_s
       "Gate<##{object_id}> [#{@input_one} #{@operator} #{@input_two}]"
+    end
+
+    def probe_wire(wire_name, resolved_wires)
+      input_name = instance_variable_get("@input_#{wire_name}".to_sym)
+      input = if input_name
+        if input_name[/\d+/]
+          input_name.to_i
+        elsif resolved_wires.key? input_name
+          resolved_wires[input_name]
+        end
+      end
     end
 
     def output
