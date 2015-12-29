@@ -48,7 +48,6 @@ module Day07
     def resolve
       @resolved_wires={}
       until @resolved_wires.keys.size == @wires.size do
-        #puts "#{@resolved_wires.keys.size} =/= #{@wires.size}"
         @wires.each do |wire|
           begin
             unless @resolved_wires.key? wire.name
@@ -65,29 +64,37 @@ module Day07
       end
     end
 
+    def tap_wire_source(input_name)
+      input = if input_name
+        if input_name[/\d+/]
+          input_name.to_i
+        elsif @resolved_wires.key? input_name
+          @resolved_wires[input_name]
+        end
+      end
+    end
+
     def get_wire_output(wire)
       operator = wire.source.instance_variable_get(:@operator)
       if operator && operator != :noop
-        input_one = @resolved_wires[wire.source.instance_variable_get(:@input_one)]
+        input_one_name = wire.source.instance_variable_get(:@input_one)
         input_two_name = wire.source.instance_variable_get(:@input_two)
-        input_two = if input_two_name
-          if input_two_name[/\d+/]
-            input_two_name.to_i
-          else
-            @resolved_wires[input_two_name]
-          end
-        end
-        Gate.new(input_one, operator, input_two).output
+        input_one = tap_wire_source(input_one_name)
+        input_two = tap_wire_source(input_two_name)
+        output = Gate.new(input_one, operator, input_two).output
+        flunk "[CircuitBoard#get_wire_output] gate is dependent on unresolved inputs #{input_one_name} => #{input_one}, #{input_two_name} => #{input_two}" unless output
+        output
       elsif operator && operator == :noop
         input_one = @resolved_wires[wire.source.output]
-        input_one or flunk "#{wire.name} is dependent on unresolved wire #{wire.source.to_s}"
+        flunk "[CircuitBoard#get_wire_output] #{wire.name} is dependent on unresolved wire #{wire.source.to_s}" unless input_one
+        input_one
       else
         wire.source.output
       end
     end
 
     def flunk(s)
-      puts s
+      #puts s
       fail RuntimeError, s
     end
   end
@@ -104,27 +111,30 @@ module Day07
     end
 
     def output
-      result = if @operator
+      if @operator
         self.send(@operator)
       elsif @input_one
         @input_one
       end
-      result or fail 'incomplete gate'
     end
 
     def and
+      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one & @input_two
     end
 
     def or
+      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one | @input_two
     end
 
     def rshift
+      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one >> @input_two
     end
 
     def lshift
+      fail RuntimeError, 'both inputs must be present' if @input_one.nil? || @input_two.nil?
       @input_one << @input_two
     end
 

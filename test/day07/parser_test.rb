@@ -24,10 +24,14 @@ describe Day07::Parser do
       subject.read_circuit.must_equal ["a -> 123", "lx -> 123", "ly -> 123"]
     end
 
-    focus
     it 'reads' do
       subject = Day07::Parser.new("123 -> lx\n456 -> ly\nly OR lx -> a")
       subject.read_circuit.must_equal ["a -> 507", "lx -> 123", "ly -> 456"]
+    end
+
+    it 'reads' do
+      subject = Day07::Parser.new("c LSHIFT 1 -> t\n0 -> c")
+      subject.read_circuit.must_equal ["c -> 0", "t -> 0"]
     end
   end
 end
@@ -40,6 +44,10 @@ describe Day07::Gate do
 
     it '123 OR 456 gives 507' do
       Day07::Gate.new(123, 'OR', 456).output.must_equal 507
+    end
+
+    it 'nil OR 456 gives ERROR' do
+      assert_raises(RuntimeError) { Day07::Gate.new(nil, 'OR', 456).output }
     end
 
     it '123 LSHIFT 2 gives 492' do
