@@ -24,7 +24,7 @@ task :new do
     end
 
     File.open(main_file_name, 'w') do |file|
-      file.write "module #{day_name.capitalize}; end\n"
+      file.write "module #{day_name.capitalize}; end\n\n"
       file.write "require './#{day_name}/parser'\n"
     end
 
@@ -158,5 +158,16 @@ namespace :day07 do
   task :answer do
     require './day07/day07'
     puts Day07::Parser.new(File.open('./day07/input.txt').read)
+  end
+end
+
+namespace :day08 do
+  task :test do
+    Dir.glob('./test/day08/*_test.rb').each { |file| require file }
+  end
+
+  task :answer do
+    require './day08/day08'
+    puts Day08::Parser.new(File.open('./day08/input.txt').read)
   end
 end
