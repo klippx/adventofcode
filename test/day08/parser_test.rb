@@ -2,9 +2,15 @@ require 'minitest/autorun'
 require './day08/day08'
 
 describe Day08::Parser do
-  describe '#calculate_excess_weight' do
-    it 'the total number of characters of string code (2 + 5 + 10 + 6 = 23) minus the total number of characters in memory for string values (0 + 3 + 7 + 1 = 11) is 23 - 11 = 12' do
-      Day08::Parser.new('""\n"abc"\n"aaa\"aaa"\n"\x27"').calculate_excess_weight.must_equal 12
+  describe '#total_code_length' do
+    it 'the total number of characters of string code (2 + 5 + 10 + 6 = 23)' do
+      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_code_length.must_equal 23
+    end
+  end
+
+  describe '#total_char_length' do
+    it 'the total number of characters in memory for string values (0 + 3 + 7 + 1 = 11)' do
+      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_char_length.must_equal 11
     end
   end
 end
