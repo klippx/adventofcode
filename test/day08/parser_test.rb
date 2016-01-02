@@ -32,6 +32,14 @@ describe Day08::StringInspector do
     it '"\x27" is 6 characters of code, but the string itself contains just one - an apostrophe (\'), escaped using hexadecimal notation' do
       Day08::StringInspector.new('"\x27"').code_length.must_equal 6
     end
+
+    it '"qxfcsmh" => 9' do
+      Day08::StringInspector.new('"qxfcsmh"').code_length.must_equal 9
+    end
+
+    it '"zf\x23\\hlj\\kkce\\d\\asy\"yyfestwcdxyfj" => 42' do
+      Day08::StringInspector.new('"zf\x23\\hlj\\kkce\\d\\asy\"yyfestwcdxyfj"').code_length.must_equal 42
+    end
   end
 
   describe '#char_length' do
@@ -49,6 +57,14 @@ describe Day08::StringInspector do
 
     it '"\x27" is 6 characters of code, but the string itself contains just one - an apostrophe (\'), escaped using hexadecimal notation' do
       Day08::StringInspector.new('"\x27"').char_length.must_equal 1
+    end
+
+    it '"qxfcsmh" => 7' do
+      Day08::StringInspector.new('"qxfcsmh"').char_length.must_equal 7
+    end
+
+    it '"zf\x23\\hlj\\kkce\\d\\asy\"yyfestwcdxyfj" => 32' do
+      Day08::StringInspector.new('"zf\x23\\hlj\\kkce\\d\\asy\"yyfestwcdxyfj"').char_length.must_equal 32
     end
   end
 end
