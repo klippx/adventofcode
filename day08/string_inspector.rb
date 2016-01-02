@@ -9,15 +9,16 @@ module Day08
         .gsub(/\\x[0-9a-fA-F][0-9a-fA-F]/,'xxxx')
         .gsub(/\\"/,'xx')
         .gsub(/\"/,'x')
-        .gsub(/\\/,'xx')
+        .gsub(/\\/,'x')
         .length
     end
 
     def char_length
       @input
-        .gsub(/\\x[0-9a-fA-F][0-9a-fA-F]/,'x')
-        .gsub(/\\"/,'x')
+        .gsub(/\\x[0-9a-fA-F][0-9a-fA-F]/,'#')
+        .gsub(/\\"/,'@')
         .gsub(/\"/,'')
+        .gsub(/\\\\/,'x')
         .length
     end
   end
