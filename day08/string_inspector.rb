@@ -17,5 +17,19 @@ module Day08
         .gsub(/\\/,'')
         .length
     end
+
+    def encoded_length
+      "\"#{encoded_length_inner}\"".length
+    end
+
+    private
+
+    def encoded_length_inner
+      @input
+        .gsub(/"/,'^^')
+        .gsub(/\\/,'vv')
+        .gsub(/\\x/,'>>>')
+        .gsub(/\\\\/,'<<')
+      end
   end
 end

@@ -13,6 +13,12 @@ describe Day08::Parser do
       Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_char_length.must_equal 57
     end
   end
+
+  describe '#total_encoded_length' do
+    it 'the total number of characters of string code for encoded values (6 + 9 + 16 + 11 + 56 + 24 + 13 = 139)' do
+      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_encoded_length.must_equal 139
+    end
+  end
 end
 
 describe Day08::StringInspector do
@@ -89,6 +95,36 @@ describe Day08::StringInspector do
 
     it '"hey\\" => 4' do
       Day08::StringInspector.new('"hey\\\\"').char_length.must_equal 4
+    end
+  end
+
+  describe '#encoded_length' do
+    it '"" encodes to "\"\"", an increase from 2 characters to 6' do
+      Day08::StringInspector.new('""').encoded_length.must_equal 6
+    end
+
+    it '"abc" encodes to "\"abc\"", an increase from 5 characters to 9' do
+      Day08::StringInspector.new('"abc"').encoded_length.must_equal 9
+    end
+
+    it '"aaa\"aaa" encodes to "\"aaa\\\"aaa\"", an increase from 10 characters to 16' do
+      Day08::StringInspector.new('"aaa\"aaa"').encoded_length.must_equal 16
+    end
+
+    it '"\x27" encodes to "\"\\x27\"", an increase from 6 characters to 11' do
+      Day08::StringInspector.new('"\x27"').encoded_length.must_equal 11
+    end
+
+    it '"byc\x9dyxuafof\\\xa6uf\\axfozomj\\olh\x6a" encodes to "\"bycvvx9dyxuafof\\x9dyxa6uf\\\\axfozomj\\\\olh\\x6a\"" => 56' do
+      Day08::StringInspector.new('"byc\x9dyxuafof\\\\\xa6uf\\\\axfozomj\\\\olh\x6a"').encoded_length.must_equal 56
+    end
+
+    it '"\\\\mouqqcsgmz" encodes to "\"\\\\\\\\mouqqcsgmz\"" => 24' do
+      Day08::StringInspector.new('"\\\\\\\\mouqqcsgmz"').encoded_length.must_equal 24
+    end
+
+    it '"hey\\" encodes to "\"hey\\\\\"" => 13' do
+      Day08::StringInspector.new('"hey\\\\"').encoded_length.must_equal 13
     end
   end
 end
