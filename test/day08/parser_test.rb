@@ -3,14 +3,14 @@ require './day08/day08'
 
 describe Day08::Parser do
   describe '#total_code_length' do
-    it 'the total number of characters of string code (2 + 5 + 10 + 6 + 45 + 16 = 84)' do
-      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_code_length.must_equal 84
+    it 'the total number of characters of string code (2 + 5 + 10 + 6 + 45 + 16 + 7 = 91)' do
+      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_code_length.must_equal 91
     end
   end
 
   describe '#total_char_length' do
-    it 'the total number of characters in memory for string values (0 + 3 + 7 + 1 + 30 + 12 = 53)' do
-      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_char_length.must_equal 53
+    it 'the total number of characters in memory for string values (0 + 3 + 7 + 1 + 30 + 12 + 4 = 57)' do
+      Day08::Parser.new(File.open('./test/day08/fixtures/parser_input.txt').read).total_char_length.must_equal 57
     end
   end
 end
@@ -48,6 +48,10 @@ describe Day08::StringInspector do
     it '"\\\\mouqqcsgmz" => 16' do
       Day08::StringInspector.new('"\\\\\\\\mouqqcsgmz"').code_length.must_equal 16
     end
+
+    it '"hey\\" => 7' do
+      Day08::StringInspector.new('"hey\\\\"').code_length.must_equal 7
+    end
   end
 
   describe '#char_length' do
@@ -81,6 +85,10 @@ describe Day08::StringInspector do
 
     it '"\\\\mouqqcsgmz" => 12' do
       Day08::StringInspector.new('"\\\\\\\\mouqqcsgmz"').char_length.must_equal 12
+    end
+
+    it '"hey\\" => 4' do
+      Day08::StringInspector.new('"hey\\\\"').char_length.must_equal 4
     end
   end
 end
