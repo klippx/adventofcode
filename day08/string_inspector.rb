@@ -19,6 +19,7 @@ module Day08
         .gsub(/\\"/,'@')
         .gsub(/\"/,'')
         .gsub(/\\\\/,'x')
+        .gsub(/\\/,'')
         .length
     end
   end
