@@ -5,12 +5,7 @@ module Day08
     end
 
     def code_length
-      @input
-        .gsub(/\\x[0-9a-fA-F][0-9a-fA-F]/,'xxxx')
-        .gsub(/\\"/,'xx')
-        .gsub(/\"/,'x')
-        .gsub(/\\/,'x')
-        .length
+      @input.length
     end
 
     def char_length
